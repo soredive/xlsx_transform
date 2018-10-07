@@ -1,0 +1,7 @@
+__pycache__/
+*.spec
+build/
+dist/
+*.log
+origin.xls
+.ipynb_checkpoints/
