@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 import pandas as pd
 import re
-# from xlsxwriter.utility import xl_rowcol_to_cell
 from tkinter import filedialog
 from tkinter import *
 import time
@@ -45,15 +44,6 @@ class ExcelTrans:
 		color = 'green' if val > 2 else 'black'
 		return 'color: %s' % color
 	
-	# 제거할 칼럼명
-	def getRemoveList(self,columns):
-		need_columns = ['수취인명', '상품명', '옵션정보', '수량', '수취인연락처1', '배송지', '배송메세지']
-		removes = []
-		for item in columns:
-			if item not in need_columns:
-				removes.append(item)
-		return removes
-
 	# 정규식 옵션정보에서 불필요한 내용 제거
 	def optionInfo(self,str):
 		regex = r"[^:]*:([^/]*)"
@@ -92,13 +82,10 @@ class ExcelTrans:
 			lists = pd.read_excel(openFile, header=1)
 			lists = lists.fillna('')
 
-			# removes = getRemoveList(lists.columns.values)
-			# lists = lists.drop(columns=removes)
 			lists = lists[['배송지','수취인명', '수취인연락처1','배송메세지','상품명', '옵션정보', '수량']]
 			lists['옵션정보'] = lists['옵션정보'].apply(self.optionInfo)
 			lists = lists[~lists['상품명'].str.contains('정식 라이센스|정식라이센스')]
 			# lists.reset_index(drop=True, inplace=True)
-			# lists.style.apply(greencolor,subset=['수량'])
 
 			# 읽고 나서 저장하기
 			path, filename, folder = self.outputPath(openFile)
@@ -126,15 +113,6 @@ class ExcelTrans:
 			color_range = "G2:G{}".format(number_rows+1)
 			format2 = workbook.add_format({'bg_color': '#C6EFCE','font_color': '#006100'})
 			worksheet.conditional_format(color_range, {'type': 'cell','criteria': '>','value': 1,'format': format2})
-			# for column in range(1,number_rows):
-			#     cell_location = xl_rowcol_to_cell(column, 6)
-			#     display(cell_location)
-			#     # Get the range to use for the sum formula
-			#     start_range = xl_rowcol_to_cell(1, column)
-			#     end_range = xl_rowcol_to_cell(number_rows, column)
-			#     # Construct and write the formula
-			#     formula = "=SUM({:s}:{:s})".format(start_range, end_range)
-			#     worksheet.write_formula(cell_location, formula, total_fmt)
 			writer.save()
 		except Exception as e:
 			 print("Unexpected error: {}".format(str(e)))
