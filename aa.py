@@ -118,7 +118,13 @@ class ExcelTrans:
 
 			# 노티 보내기
 			toaster = ToastNotifier()
-			toaster.show_toast("마켓인벤 엑셀변환기", filename + "파일 변환이 완료되었습니다")
+			toaster.show_toast("마켓인벤 엑셀변환기",
+			                   filename + "파일 변환이 완료되었습니다",
+			                   icon_path=None,
+			                   duration=5,
+			                   threaded=True)
+			while toaster.notification_active(): time.sleep(0.1)
+
 		except Exception as e:
 			 print("Unexpected error: {}".format(str(e)))
 			 time.sleep(10)
