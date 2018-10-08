@@ -10,6 +10,23 @@ from win10toast import ToastNotifier
 
 class ExcelTrans:
 
+	# 번들 경로 저장
+	def __init__(self):
+		self.appPath = ''
+		self.iconPath = ''
+		try:
+			if getattr(sys, 'frozen', False):
+				# 번들되었을때
+				bundle_dir = sys._MEIPASS
+			else:
+				# 일반적인환경
+				bundle_dir = os.path.dirname(os.path.abspath(__file__))
+			self.appPath = bundle_dir
+			if os.path.exists(bundle_dir + '/overwatch.ico') and os.path.isfile(bundle_dir + '/overwatch.ico'):
+				self.iconPath = bundle_dir + '/overwatch.ico'
+		except Exception as e:
+			print("{}".format(str(e)))
+
 	# 읽었던 경로 저장
 	def setReadPath(self,path):
 		configFile = os.getcwd()+'/market_excel_transform.log'
@@ -63,13 +80,18 @@ class ExcelTrans:
 	def start(self):
 		root = Tk()
 		root.title("마켓인벤 엑셀변환기")
+		try:
+			root.iconbitmap(self.iconPath)
+		except Exception as e:
+			print("Unexpected error: {}".format(str(e)))
+		
 		root.geometry("500x400")
 		menubar = Menu(root)
 		menubar.add_command(label="변환하기", command=self.gogogo)
 		menubar.add_command(label="종료", command=root.quit)
 		root.config(menu=menubar)
 		root.mainloop()
-
+		
 	def gogogo(self):
 		# 파일 읽기
 		try:
@@ -120,7 +142,7 @@ class ExcelTrans:
 			toaster = ToastNotifier()
 			toaster.show_toast("마켓인벤 엑셀변환기",
 			                   filename + "파일 변환이 완료되었습니다",
-			                   icon_path=None,
+							   icon_path=self.iconPath,
 			                   duration=5,
 			                   threaded=True)
 			while toaster.notification_active(): time.sleep(0.1)
