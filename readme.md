@@ -1,5 +1,10 @@
-simple excel transform
+excel transform program
+
+build:
+
+pyinstaller aa.spec
 
 usage:
 
-pyinstaller aa.py --onefile --noconsole
+click transform button and select xls file
+then converted file will show
