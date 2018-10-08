@@ -6,6 +6,7 @@ from tkinter import *
 import time
 import sys
 import os
+from win10toast import ToastNotifier
 
 class ExcelTrans:
 
@@ -61,7 +62,7 @@ class ExcelTrans:
 
 	def start(self):
 		root = Tk()
-		root.title("티셔츠 엑셀 변환기")
+		root.title("마켓인벤 엑셀변환기")
 		root.geometry("500x400")
 		menubar = Menu(root)
 		menubar.add_command(label="변환하기", command=self.gogogo)
@@ -114,6 +115,10 @@ class ExcelTrans:
 			format2 = workbook.add_format({'bg_color': '#C6EFCE','font_color': '#006100'})
 			worksheet.conditional_format(color_range, {'type': 'cell','criteria': '>','value': 1,'format': format2})
 			writer.save()
+
+			# 노티 보내기
+			toaster = ToastNotifier()
+			toaster.show_toast("마켓인벤 엑셀변환기", filename + "파일 변환이 완료되었습니다")
 		except Exception as e:
 			 print("Unexpected error: {}".format(str(e)))
 			 time.sleep(10)
