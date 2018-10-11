@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['aa.py'],
-             pathex=['C:/Users/kimbu/aa'],
+             pathex=['.'],
              binaries=[],
              datas=[('./overwatch.ico','.')],
              hiddenimports=[],
