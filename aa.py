@@ -142,11 +142,15 @@ class ExcelTrans:
 			worksheet.set_column('F:F', 50)
 			worksheet.set_column('G:G', 6)
 
+			# 엑셀 조건부 서식
 			number_rows = len(lists.index)
-
-			color_range = "G2:G{}".format(number_rows+1)
-			format2 = workbook.add_format({'bg_color': '#C6EFCE','font_color': '#006100'})
-			worksheet.conditional_format(color_range, {'type': 'cell','criteria': '>','value': 1,'format': format2})
+			color_range = "A2:G{}".format(number_rows+1)
+			color_range2 = "A2:G{}".format(number_rows+1)
+			format1 = workbook.add_format({'bg_color': '#C6EFCE','font_color': '#006100'})
+			format2 = workbook.add_format({'bg_color': '#efefef'})
+			worksheet.conditional_format(color_range, {'type': 'formula','criteria': '=$G2>1','format': format1})
+			worksheet.conditional_format(color_range2, {'type': 'formula','criteria': '=isblank($A2)','format': format2})
+			worksheet.freeze_panes(1, 0)
 			writer.save()
 
 			# 노티 보내기
