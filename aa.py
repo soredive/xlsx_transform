@@ -1,5 +1,6 @@
 #-*- coding: utf-8 -*-
 import pandas as pd
+from pandas import DataFrame
 import re
 from tkinter import filedialog
 from tkinter import *
@@ -110,6 +111,16 @@ class ExcelTrans:
 			lists = lists[~lists['상품명'].str.contains('정식 라이센스|정식라이센스')]
 			# lists.reset_index(drop=True, inplace=True)
 
+			# 주소지가 다른 열마다 빈 공백 추가하기
+			oldAddress = ''
+			for i, row in lists.iterrows():
+				if i != 0 and row.get('배송지') != oldAddress:
+					line = DataFrame({'배송지':'','수취인명':'', '수취인연락처1':'','배송메세지':'','상품명':'', '옵션정보':'', '수량':''}, index=[i-0.5])
+					lists = lists.append(line,ignore_index=False)
+				oldAddress = row.get('배송지')
+			lists=lists.sort_index().reset_index(drop=True)
+			lists = lists[['배송지','수취인명', '수취인연락처1','배송메세지','상품명', '옵션정보', '수량']]
+
 			# 읽고 나서 저장하기
 			path, filename, folder = self.outputPath(openFile)
 
@@ -145,7 +156,7 @@ class ExcelTrans:
 							   icon_path=self.iconPath,
 			                   duration=5,
 			                   threaded=True)
-			while toaster.notification_active(): time.sleep(0.1)
+			# while toaster.notification_active(): time.sleep(0.1)
 
 		except Exception as e:
 			 print("Unexpected error: {}".format(str(e)))
